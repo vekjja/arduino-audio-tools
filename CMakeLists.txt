@@ -3,13 +3,19 @@ cmake_minimum_required(VERSION 3.16)
 if (DEFINED ESP_PLATFORM)
 
     # idf component
-    idf_component_register(
-        # SRC_DIRS src
-        INCLUDE_DIRS src 
-        REQUIRES bt esp_common freertos hal log nvs_flash driver esp_adc esp_http_client
-    )
+    # Only build with full dependencies for devices with Classic Bluetooth
+    if(CONFIG_BT_CLASSIC_ENABLED)
+        idf_component_register(
+            # SRC_DIRS src
+            INCLUDE_DIRS src 
+            REQUIRES bt esp_common freertos hal log nvs_flash driver esp_adc esp_http_client
+        )
 
-    target_compile_options(${COMPONENT_LIB} INTERFACE -DESP32_CMAKE=1 -Wno-error -Wno-format -fpermissive)
+        target_compile_options(${COMPONENT_LIB} INTERFACE -DESP32_CMAKE=1 -Wno-error -Wno-format -fpermissive)
+    else()
+        # For devices without Classic BT (e.g., ESP32-C3), register as empty component
+        idf_component_register()
+    endif()
 
 else()
 
