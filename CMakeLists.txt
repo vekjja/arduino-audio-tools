@@ -13,8 +13,8 @@ if (DEFINED ESP_PLATFORM)
 
         target_compile_options(${COMPONENT_LIB} INTERFACE -DESP32_CMAKE=1 -Wno-error -Wno-format -fpermissive)
     else()
-        # For devices without Classic BT (e.g., ESP32-C3), register as empty component
-        idf_component_register()
+        # For devices without Classic BT (e.g., ESP32-C3), don't register the component at all
+        return()
     endif()
 
 else()
