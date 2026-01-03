@@ -2,13 +2,18 @@ cmake_minimum_required(VERSION 3.16)
 
 if (DEFINED ESP_PLATFORM)
 
-    # idf component
-    idf_component_register(
-        INCLUDE_DIRS src 
-        REQUIRES esp_common freertos hal log nvs_flash driver esp_adc esp_http_client
-    )
+    if(CONFIG_BT_A2DP_ENABLE)
+        # idf component
+        idf_component_register(
+            INCLUDE_DIRS src 
+            REQUIRES esp_common freertos hal log nvs_flash driver esp_adc esp_http_client
+        )
 
-    target_compile_options(${COMPONENT_LIB} INTERFACE -DESP32_CMAKE=1 -Wno-error -Wno-format -fpermissive)
+        target_compile_options(${COMPONENT_LIB} INTERFACE -DESP32_CMAKE=1 -Wno-error -Wno-format -fpermissive)
+    else()
+        # Register empty component when A2DP is disabled
+        idf_component_register()
+    endif()
 
 else()
 
